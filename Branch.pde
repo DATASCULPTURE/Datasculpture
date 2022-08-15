@@ -6,6 +6,9 @@ class Branch {
     int nbModules;
     float[] values;
     
+    float offsetLeft = 0;
+    float offsetRight = 0;
+    
     ArrayList<PVector> vertices;
     PVector origin;
     
@@ -48,8 +51,15 @@ class Branch {
     void setBottom(PVector left, PVector right) {
         this.bottomLeft = left;
         this.bottomRight = right;
-        //todo
-        this.origin = new PVector(left.x, max(left.y, right.y));
+        
+        if (left.y > right.y) {
+            this.offsetRight = left.y - right.y;
+            this.origin = new PVector(left.x, left.y);
+        }
+        else  {
+            this.offsetLeft = right.y - left.y;
+            this.origin = new PVector(left.x, right.y);
+        }
     }
     
     void generate() {   
@@ -59,42 +69,48 @@ class Branch {
         shape.rotate(this.angle);
         shape.addChild(getFaces());
         shape.addChild(getTop());
+        shape.addChild(getCaps());
     }
     
     PShape getFaces() {
         PShape faces = createShape(GROUP);
         
-        PShape innerFace =  createShape();
-        PShape outerFace =  createShape();
+        PShape leftFace =  createShape();
+        PShape rightFace =  createShape();
         
-        innerFace.beginShape();
-        outerFace.beginShape();
+        leftFace.beginShape();
+        rightFace.beginShape();
+        
+        //first vertex offset
+        PVector v = vertices.get(0);
+        if (this.offsetLeft > 0)
+            leftFace.vertex(v.x, v.y - this.offsetLeft, v.z);
+        if (this.offsetRight > 0)
+            rightFace.vertex(v.x + this.width, v.y - this.offsetRight, v.z);
+        
+        //middle vertices
         for (int i = 0; i < vertices.size(); i++) {
-            PVector v = vertices.get(i);
-            innerFace.vertex(v.x, v.y, v.z);
-            outerFace.vertex(v.x + this.width, v.y, v.z);
+            v = vertices.get(i);
+            leftFace.vertex(v.x, v.y, v.z);
+            rightFace.vertex(v.x + this.width, v.y, v.z);
         }
-        innerFace.endShape(CLOSE);
-        outerFace.endShape(CLOSE);
-        faces.addChild(innerFace);
-        faces.addChild(outerFace);   
+        
+        //last vertex offset
+        v = vertices.get(vertices.size() - 1);
+        if (this.offsetLeft > 0)
+            leftFace.vertex(v.x, v.y - this.offsetLeft, v.z);
+        if (this.offsetRight > 0)
+            rightFace.vertex(v.x + this.width, v.y - this.offsetRight, v.z);
+        
+        leftFace.endShape(CLOSE);
+        rightFace.endShape(CLOSE);
+        faces.addChild(leftFace);
+        faces.addChild(rightFace);   
         
         return faces;  
     }
     
     
-    
-    
-    PShape getFace() {
-        PShape face = createShape();
-        face.beginShape();
-        face.vertex(this.bottomLeft.x, this.bottomLeft.y);
-        face.vertex(this.bottomLeft.x, this.bottomLeft.y + 100);
-        face.vertex(this.bottomRight.x, this.bottomRight.y + 100);
-        face.vertex(this.bottomRight.x, this.bottomRight.y);
-        face.endShape(CLOSE);
-        return face;
-    }
     
     PShape  getTop() {
         PShape top = createShape(GROUP);
@@ -114,132 +130,49 @@ class Branch {
         
         return top;
     }
+
+    PShape  getCaps() {
+        PShape caps = createShape(GROUP);
+            
+            PShape frontCap = this.getCap();
+            caps.addChild(frontCap);
+
+            PShape backCap = this.getCap();          
+            backCap.translate(0, 0, this.length);
+            caps.addChild(backCap);
+
+        return caps;
+    }
+    
+    PShape  getCap() {
+        PShape cap = createShape();
+        cap.beginShape();
+        
+        if (this.offsetLeft > 0) {
+            
+            cap.vertex(this.bottomLeft.x, this.bottomLeft.y);
+            cap.vertex(this.bottomLeft.x, this.bottomLeft.y + this.offsetLeft);
+            cap.vertex(this.bottomRight.x, this.bottomRight.y);
+            
+        }
+        
+        else if (this.offsetRight > 0) {
+            
+            cap.vertex(this.bottomRight.x, this.bottomRight.y);
+            cap.vertex(this.bottomRight.x, this.bottomRight.y + this.offsetRight);
+            cap.vertex(this.bottomLeft.x, this.bottomLeft.y);
+            
+        }
+        
+        cap.endShape(CLOSE);
+        return cap;  
+    }
+
+    PVector getBottomRight(boolean front){
+        PVector res = this.bottomRight.copy().rotate(this.angle);
+        if (!front)
+            res.set(res.x, res.y,res.z + this.length);
+        return res;
+    }
 }
 
-
-
-/*
-class Branch {
-
-int nbModules;
-float moduleLength;
-float moduleWidth;
-float shapeLength;
-ArrayList<PVector> vertices;
-PVector origin;
-
-Branch(float[] values, float moduleLength, float moduleWidth) {
-
-this.nbModules =values.length;     
-this.shapeLength= nbModules * moduleLength;
-this.moduleLength = moduleLength;
-this.moduleWidth= moduleWidth;
-origin = new PVector();    
-
-vertices = new ArrayList<PVector>();
-
-vertices.add(origin);
-
-PVector latestVertex = origin.copy();
-for (int i = 0; i < nbModules; i++) {
-float value = values[i];
-PVector start = new PVector(origin.x, origin.y + (i * moduleLength), origin.z + value);
-PVector end = new PVector(origin.x, origin.y + (i * moduleLength) + moduleLength, origin.z + value);
-
-if (!latestVertex.equals(start))
-vertices.add(start);
-vertices.add(end);
-
-latestVertex = end.copy();
-}
-
-vertices.add(new PVector(origin.x, origin.y + moduleLength * nbModules, origin.z));
-
-generate();   
-}
-
-void generate() {   
-shape = createShape(GROUP);
-shape.translate(moduleWidth / 2,0,0);
-shape.addChild(getTop());
-shape.addChild(getFaces());
-shape.addChild(getBottom());
-shape.addChild(getCaps());
-
-}
-
-PShape getShape() {
-return shape;
-}
-*/
-
-/**** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-PARTS
-***** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * / 
-
-/*
-
-
-PShape getFaces() {
-PShape faces = createShape(GROUP);
-
-PShape innerFace =  createShape();
-PShape outerFace =  createShape();
-
-innerFace.beginShape();
-outerFace.beginShape();
-for (int i = 0; i < vertices.size(); i++) {
-PVector v = vertices.get(i);
-innerFace.vertex(v.x, v.y, v.z);
-outerFace.vertex(v.x - moduleWidth, v.y, v.z);
-}
-innerFace.endShape(CLOSE);
-outerFace.endShape(CLOSE);
-faces.addChild(innerFace);
-faces.addChild(outerFace);   
-
-return faces;  
-}
-
-PShape getBottom() {
-
-PShape bottom = createShape();
-bottom.beginShape();
-PVector start = vertices.get(0);
-PVector end = vertices.get(vertices.size() - 1);
-bottom.vertex(start.x - moduleWidth, start.y, start.z);
-bottom.vertex(end.x - moduleWidth, end.y, end.z);
-bottom.vertex(end.x - moduleWidth, end.y, end.z + moduleWidth);
-bottom.vertex(start.x - moduleWidth , start.y, start.z + moduleWidth);
-bottom.endShape(CLOSE);
-bottom.translate(0,0, -moduleWidth);
-
-return bottom;  
-}
-
-PShape getCaps() {
-PShape caps = createShape(GROUP);
-PShape capStart = getCap();
-caps.addChild(capStart);
-
-
-PShape capEnd = getCap();
-capEnd.translate(0,shapeLength,0);
-caps.addChild(capEnd);
-
-return caps;
-}
-
-PShape getCap() {
-PShape cap = createShape();
-cap.beginShape();
-cap.vertex(origin.x, origin.y, origin.z);
-cap.vertex(origin.x - moduleWidth, origin.y, origin.z);
-cap.vertex(origin.x - moduleWidth, origin.y, origin.z - moduleWidth);
-cap.endShape(CLOSE);
-return cap;
-}
-
-}
-
-*/

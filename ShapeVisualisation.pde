@@ -1,30 +1,109 @@
 class ShapeVisualisation {
     int nbBranches; 
     Branch[] branches;   
-    PVector origin;
+    float[][] values;
+
     PShape shape;
-    float angle;
     
-    ShapeVisualisation(float[][] values, float angle) {
+    //shapes settings
+    float angle;
+    float width;
+    float moduleLength;
+    
+    //default parameters
+    ShapeVisualisation(float[][] values) {  
+        this(values,(PI * 2) / values.length, 10, 10);
+    }   
+    
+    ShapeVisualisation(float[][] values, float angle, float width, float moduleLength) {
+        this.values = values;
+        this.nbBranches = values.length; 
+        this.branches = new Branch[this.nbBranches];
+        this.angle = min(angle,(PI * 2) / this.nbBranches);
+        this.width = width;
+        this.moduleLength = moduleLength;
         
-        nbBranches = values.length;
-        origin = new PVector();    
-        branches = new Branch[nbBranches];
-        angle = min(angle,(PI * 2) / nbBranches);
+        this.update();  
+    }
+    
+    
+    /***********************************************************************************************
+    SETTERS
+    ************************************************************************************************/
+    void setAngle(float angle) {
+        this.angle = min(angle,(PI * 2) / this.nbBranches);
+        this.update();
+    }
+    
+    void setWidth(float width) {
+        this.width = width;
+        this.update();
+    }
+    
+    void setModuleLength(float moduleLength) {
+        this.moduleLength = moduleLength;
+        this.update();
+    }
+    
+    
+    /***********************************************************************************************
+    SHAPES
+    ************************************************************************************************/
+    void getShape() {
+        shape = createShape(GROUP);
+        for (int i = 0; i < nbBranches; i++) {
+            branches[i].generate();
+            shape.addChild(branches[i].shape);
+        }  
+        shape.addChild(getCaps());
+    }
+    
+    
+    PShape getCaps() {
+        PShape caps = createShape(GROUP);
         
+        PShape frontCap = this.getCap(true);
+        caps.addChild(frontCap);
+        
+        
+        PShape backCap = this.getCap(false);          
+        caps.addChild(backCap);
+        
+        
+        return caps;
+    }
+    
+    PShape getCap(boolean front) {
+        PShape cap = createShape();
+        cap.beginShape();
         
         for (int i = 0; i < nbBranches; i++) {
-            branches[i] = new Branch(angle * i, 20.0, 20,  values[i]);
+            PVector v = this.branches[i].getBottomRight(front);
+            cap.vertex(v.x, v.y, v.z);
+        }  
+        cap.endShape(CLOSE);
+        return cap;
+    }
+    
+    
+    /***********************************************************************************************
+    INTERNALS
+    ************************************************************************************************/
+    void update() {
+
+        //Create empty branches
+        for (int i = 0; i < this.nbBranches; i++) {
+            this.branches[i] = new Branch(this.angle * i, this.width, this.moduleLength,  this.values[i]);
         }   
         
-        ///get starting points
-        for (int i = 0; i < nbBranches; i++) {
+        //Compute the bottom vertices of each branch (they intersect each other)
+        for (int i = 0; i < this.nbBranches; i++) {
             
             //get branches
             Branch currentBranch = this.branches[i];
-            int j = (i + 1) % nbBranches;
+            int j = (i + 1) % this.nbBranches;
             Branch nextBranch = this.branches[j];
-            int k = (i - 1) < 0 ? nbBranches - 1 : i - 1;
+            int k = (i - 1) < 0 ? this.nbBranches - 1 : i - 1;
             Branch previousBranch = this.branches[k];
             
             pushMatrix();
@@ -45,35 +124,9 @@ class ShapeVisualisation {
             popMatrix();
         }   
         
-        
-        shape = createShape(GROUP);
-        //branches
-        
-        for (int i = 0; i < nbBranches; i++) {
-            branches[i].generate();
-            shape.addChild(branches[i].shape);
-        }  
-        
-        //cap
-        shape.addChild(getCap());
-        
-        
+        //Create the PShape
+        this.getShape();
     }
-
-    
-    PShape getCap() {
-        PShape cap = createShape();
-        cap.beginShape();
-
-        for (int i = 0; i < nbBranches; i++) {
-            PVector v = this.branches[i].bottomRight.rotate(this.branches[i].angle);
-            cap.vertex(v.x, v.y);
-
-        }  
-        cap.endShape(CLOSE);
-        return cap;
-    }
-    
     
     PVector branchesIntersection(Branch branch1, Branch branch2, boolean inner) {
         float angle = branch2.angle - branch1.angle;
