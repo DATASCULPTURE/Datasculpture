@@ -99,6 +99,3 @@ class STLExporter {
         writer.println("endsolid " + name);
     } 
 } 
-
-
-
