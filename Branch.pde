@@ -1,3 +1,7 @@
+/**
+* A Branch is a series of vertices, extruded with a fixed width.
+* All of the Branches are created by ShapeVisualisation, then the Branches are edited to fix the overlapping or fill teh gaps between them.
+*/
 class Branch {
     float angle;
     float width;
@@ -18,6 +22,9 @@ class Branch {
     
     PShape shape;
     
+    /**
+    * The constructor takes  and array of float values which will be used to generate the different heights of the Branch
+    */
     Branch(float angle, float width, float moduleLength, float[] values) {
         this.angle = angle;
         this.width = width;
@@ -27,6 +34,9 @@ class Branch {
         this.values = values;
     }
     
+    /**
+    * Creates a series of vertices in the same plane from the values array.
+    */
     void parseValues() {
         vertices = new ArrayList<PVector>();
         
@@ -48,6 +58,23 @@ class Branch {
         vertices.add(new PVector(origin.x, origin.y, origin.z + this.length));
     }
     
+    /**
+    * Creates a series of vertices in the same plane from the values array.
+    */
+    void generate() {   
+        this.parseValues();
+        
+        shape = createShape(GROUP);
+        shape.rotate(this.angle);
+        shape.addChild(getFaces());
+        shape.addChild(getTop());
+        shape.addChild(getCaps());
+    }
+    
+    /**
+    * Edits the current branch's bottom two vertices
+    * Needed to remove the overlapping after having generated all of the branches.
+    */
     void setBottom(PVector left, PVector right) {
         this.bottomLeft = left;
         this.bottomRight = right;
@@ -62,16 +89,10 @@ class Branch {
         }
     }
     
-    void generate() {   
-        this.parseValues();
-        
-        shape = createShape(GROUP);
-        shape.rotate(this.angle);
-        shape.addChild(getFaces());
-        shape.addChild(getTop());
-        shape.addChild(getCaps());
-    }
     
+    /**
+    * Creates the two faces of the Branch from the series of vertices
+    */
     PShape getFaces() {
         PShape faces = createShape(GROUP);
         
@@ -110,8 +131,9 @@ class Branch {
         return faces;  
     }
     
-    
-    
+    /**
+    * Creates the Top pat of the Branch (the ribbon) from the vertices array.
+    */
     PShape  getTop() {
         PShape top = createShape(GROUP);
         
@@ -130,20 +152,26 @@ class Branch {
         
         return top;
     }
-
+    
+    /**
+    * Returns the two caps of the Branch: the triangle facets at the bottom of the Branch on the front and the back.
+    */
     PShape  getCaps() {
         PShape caps = createShape(GROUP);
-            
-            PShape frontCap = this.getCap();
-            caps.addChild(frontCap);
-
-            PShape backCap = this.getCap();          
-            backCap.translate(0, 0, this.length);
-            caps.addChild(backCap);
-
+        
+        PShape frontCap = this.getCap();
+        caps.addChild(frontCap);
+        
+        PShape backCap = this.getCap();          
+        backCap.translate(0, 0, this.length);
+        caps.addChild(backCap);
+        
         return caps;
     }
     
+    /**
+    * Returns the front cap of the Branch: the triangle facet at the bottom of the Branch
+    */
     PShape  getCap() {
         PShape cap = createShape();
         cap.beginShape();
@@ -167,8 +195,12 @@ class Branch {
         cap.endShape(CLOSE);
         return cap;  
     }
-
-    PVector getBottomRight(boolean front){
+    
+    /**
+    * Returns the bottom right corner of the Branch (either from the front or the back)
+    * Needed to compute the intersection between two Branches
+    */
+    PVector getBottomRight(boolean front) {
         PVector res = this.bottomRight.copy().rotate(this.angle);
         if (!front)
             res.set(res.x, res.y,res.z + this.length);

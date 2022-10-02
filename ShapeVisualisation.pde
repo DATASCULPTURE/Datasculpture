@@ -1,8 +1,13 @@
+
+/**
+* Creates a PShape from the array of values.
+* The PShape is made of several Branches, and two caps (front and back)
+*/
 class ShapeVisualisation {
     int nbBranches; 
     Branch[] branches;   
     float[][] values;
-
+    
     PShape shape;
     
     //shapes settings
@@ -10,11 +15,12 @@ class ShapeVisualisation {
     float width;
     float moduleLength;
     
-    //default parameters
+    //constructor with default settings
     ShapeVisualisation(float[][] values) {  
         this(values,(PI * 2) / values.length, 10, 10);
     }   
     
+    //constructor with custom settings
     ShapeVisualisation(float[][] values, float angle, float width, float moduleLength) {
         this.values = values;
         this.nbBranches = values.length; 
@@ -49,7 +55,11 @@ class ShapeVisualisation {
     /***********************************************************************************************
     SHAPES
     ************************************************************************************************/
-    void getShape() {
+    
+    /**
+    * Creates the PShape ( the actual Shape and two Caps).
+    */
+    void generateShape() {
         shape = createShape(GROUP);
         for (int i = 0; i < nbBranches; i++) {
             branches[i].generate();
@@ -58,21 +68,24 @@ class ShapeVisualisation {
         shape.addChild(getCaps());
     }
     
-    
+    /**
+    * Returns a PShape group containing the two caps.
+    */
     PShape getCaps() {
         PShape caps = createShape(GROUP);
         
         PShape frontCap = this.getCap(true);
         caps.addChild(frontCap);
         
-        
         PShape backCap = this.getCap(false);          
         caps.addChild(backCap);
-        
         
         return caps;
     }
     
+    /**
+    * Returns one cap (either back or front) bewteen the ShapeVisualisation branches.
+    */
     PShape getCap(boolean front) {
         PShape cap = createShape();
         cap.beginShape();
@@ -89,8 +102,12 @@ class ShapeVisualisation {
     /***********************************************************************************************
     INTERNALS
     ************************************************************************************************/
+    
+    /**
+    * Generates the PShape. 
+    */
     void update() {
-
+        
         //Create empty branches
         for (int i = 0; i < this.nbBranches; i++) {
             this.branches[i] = new Branch(this.angle * i, this.width, this.moduleLength,  this.values[i]);
@@ -125,9 +142,17 @@ class ShapeVisualisation {
         }   
         
         //Create the PShape
-        this.getShape();
+        this.generateShape();
     }
     
+    
+    /***********************************************************************************************
+    UTILS
+    ************************************************************************************************/
+    
+    /**
+    * Return the intersection of two Branches as a PVertex 
+    */
     PVector branchesIntersection(Branch branch1, Branch branch2, boolean inner) {
         float angle = branch2.angle - branch1.angle;
         //current
@@ -151,6 +176,9 @@ class ShapeVisualisation {
         return intersection;
     }
     
+    /**
+    * Returns the intersection of two lines defined by a point (PVertex) and a direction (PVertex)
+    */
     PVector intersect(PVector P, PVector dir1, PVector Q, PVector dir2) {
         
         PVector R = dir1.copy();
