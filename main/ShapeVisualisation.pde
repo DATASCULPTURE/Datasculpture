@@ -60,6 +60,8 @@ class ShapeVisualisation {
     * Creates the PShape ( the actual Shape and two Caps).
     */
     void generateShape() {
+        fill(255);
+        stroke(0);
         shape = createShape(GROUP);
         for (int i = 0; i < nbBranches; i++) {
             branches[i].generate();
