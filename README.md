@@ -1,45 +1,49 @@
 # Shape generator
+Ce programme est un générateur de formes sur Processing.
+Il génère une forme à partir d'un fichier .csv et l'exporte dans un fichier .stl.
+```main.pde``` est le point d'entrée du programme.
 
-This program is a shape generator in Processing. 
-It generates a shape from a .csv files and export it to a .stl file.
-The entry point is the file ```main.pde```
+---
+
+## Bibliothèques 
+
+Le programme utilise la bibliothèque Peasycam.
 
 ---
 
 ## Usage
 
-*  **TODO** from Processing
-*  **TODO** from build
-
----
-
-## Librairies 
-
-The program uses the Peasycam library.
+Clonez le prjet avec la commande `TODO` 
+Ouvrez et lancez le projet depuis l'IDE Processing. (S'il faut importer la bibliothèque Peasycam, allez dans Sketch -> Import Library -> Peasycam).  
+Quand le programme est lancé, appuyez sur la touche  *espace* pour choisir un fichier .csv à importer.  
+Quand la forme en 3D est générée, appuyez sur la touche *entrée* pour l'exporter en .stl.  
+Par défaut, le programme ne prend pas en comptela première ligne et la première colonne du ficher .csv donné en entrée.  
 
 ---
 
 ## STLExporter 
 
-The class ```STLExporter.pde``` is used to export the generated shape into a .stl file.
-This class can be used to export any PShape.
-Feel free to use it in your projects if you ever need to export a PShape you created in Processing as a .stl file.
-To use it in your project, simply copy the file ```STLExporter.pde``` in your Processing project's folder.
-You can then create a new STLExporter object like this :
-`STLExporter exporter = new STLExporter();`
-`exporter.export(myPShape, filename);`
-Please take a look at the file  ```main.pde``` to see it in actual use.
+
+La classe ```STLExporter.pde``` est utilisée pour exporter la forme générée en un fichier .stl. Cette classe peut être utilisée pour exporter n'importe quelle PShape créée dans Processing.  
+
+Pour l'utiliser dans un projet, copier le fichier ```STLExporter.pde``` dans le dossier de votre projet Processing. Vous pouvez ensuite créer un objet STLExporter ainsi :
+`STLExporter exporter = new STLExporter();`  
+`exporter.export(myPShape, filename);`  
+
+Vous pouvez regarder le fichier  ```main.pde``` pour voir un exemple d'utilisation.
 
 
 ---
 
 ## Classes  
 
-The game use the following classes.
+ce programme utilise les classes suivantes.
 
 * Branch 
 * STLExporter 
 * ShapeVisulisation
 
-The file ```game.pde``` contains the main program.
+Le fichier```main.pde``` contient le programe principal.
+ 
+
 
