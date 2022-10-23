@@ -1,4 +1,4 @@
-# Shape generator
+# Datasculpture
 
 [English version here](README.en.md)
 
