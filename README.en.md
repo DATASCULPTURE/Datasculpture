@@ -1,4 +1,4 @@
-# Shape generator 
+# Datasculpture 
 
 This program is a shape generator in Processing.  
 It generates a shape from a .csv file and exports it to a .stl file.  
