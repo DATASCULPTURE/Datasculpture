@@ -22,7 +22,7 @@ Clonez le projet avec la commande `TODO`
 Ouvrez et lancez le projet depuis l'IDE Processing. (S'il faut importer la bibliothèque Peasycam, allez dans Sketch -> Import Library -> Peasycam).  
 Quand le programme est lancé, appuyez sur la touche  *espace* pour choisir un fichier .csv à importer.  
 Quand la forme en 3D est générée, appuyez sur la touche *entrée* pour l'exporter en .stl.  
-Par défaut, le programme ne prend pas en comptela première ligne et la première colonne du ficher .csv donné en entrée.  
+Par défaut, le programme ne prend pas en compte la première ligne et la première colonne du ficher .csv donné en entrée.  
 
 ---
 
