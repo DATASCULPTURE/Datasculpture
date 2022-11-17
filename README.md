@@ -1,6 +1,6 @@
 # Datasculpture
 
-![screenshot](https://raw.githubusercontent.com/benosse/Datasculpture/master/images/screenshot.png)
+![screenshot]([https://github.com/DATASCULPTURE/Datasculpture/master/images/screenshot.png?raw=true])
 
 [English version here](README.en.md)
 
