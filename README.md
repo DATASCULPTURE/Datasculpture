@@ -1,5 +1,7 @@
 # Datasculpture
 
+![screenshot](https://raw.githubusercontent.com/benosse/Datasculpture/master/images/screenshot.png)
+
 [English version here](README.en.md)
 
 Ce programme est un générateur de formes sur Processing.
@@ -16,7 +18,7 @@ Le programme utilise la bibliothèque Peasycam.
 
 ## Usage
 
-Clonez le prjet avec la commande `TODO` 
+Clonez le projet avec la commande `TODO` 
 Ouvrez et lancez le projet depuis l'IDE Processing. (S'il faut importer la bibliothèque Peasycam, allez dans Sketch -> Import Library -> Peasycam).  
 Quand le programme est lancé, appuyez sur la touche  *espace* pour choisir un fichier .csv à importer.  
 Quand la forme en 3D est générée, appuyez sur la touche *entrée* pour l'exporter en .stl.  
