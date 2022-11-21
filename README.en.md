@@ -1,6 +1,8 @@
 # Datasculpture 
 
-This program is a shape generator in Processing.  
+## Program
+
+The Datasculpture program is a shape generator in Processing.  
 It generates a shape from a .csv file and exports it to a .stl file.  
 The entry point is the file ```main.pde```  
 
