@@ -1,5 +1,11 @@
 # Datasculpture 
 
+DATASCULPTURE is a project led by Émilie Perotto on the occasion of the MAIF prize for sculpture, of which she was the winner in 2022.<br>
+This project is deployed with this program (designed by Benoît Zenker) which makes it possible to generate an .stl file from a .csv file so that the company Novadditive can print a first DATASCULPTURE in ceramic.<br>
+This DATASCULPTURE makes tangible data that highlights social inequalities. It compares the quantity of diamonds extracted from the world's top 10 producing countries in 2019, and their infant mortality. (link to the sculpture to come)
+
+---
+
 ## Program
 
 The Datasculpture program is a shape generator in Processing.  
