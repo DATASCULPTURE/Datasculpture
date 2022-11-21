@@ -1,10 +1,16 @@
 # Datasculpture
 
-![screenshot](https://github.com/DATASCULPTURE/Datasculpture/blob/master/images/screenshot.png?raw=true)
-
 [English version here](README.en.md)
 
-Ce programme est un générateur de formes sur Processing.
+DATASCULPTURE est un projet mené par Émilie Perotto à l'occasion du prix MAIF pour la sculpture, dont elle a été lauréate en 2022. <br>
+Ce projet se déploie avec ce programme (conçu par Benoît Zenker) qui permet de générer un fichier .stl à partir d'un fichier .csv afin que l'entreprise Novadditive imprime en céramique une première DATASCULPTURE. <br>
+Cette DATASCULPTURE rend tangible des données qui mettent en évidence des inégalités sociales. Elle met en parallèle la quantité de diamant extraite des 10 premiers pays producteurs mondiaux en 2019, et leur mortalité infantile. (lien vers la sculpture à venir)
+
+![screenshot](https://github.com/DATASCULPTURE/Datasculpture/blob/master/images/screenshot.png?raw=true)
+
+## Programme
+
+Le programme Datasculpture est un générateur de formes sur Processing.
 Il génère une forme à partir d'un fichier .csv et l'exporte dans un fichier .stl.
 ```main.pde``` est le point d'entrée du programme.
 
